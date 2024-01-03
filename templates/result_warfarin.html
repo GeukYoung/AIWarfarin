@@ -1,0 +1,326 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PTINR Graph and Table</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <style>
+        .green-row {
+            background-color: #98fb98;
+        }
+        .lightgreen-row {
+            background-color: #ccffcc;
+        }
+        .lighter-green-row {
+            background-color: #ccffcc;
+        }
+        .bold-text {
+            font-weight: bold;
+        }
+    </style>
+    
+    <script>
+    function adjustFontSize() {
+        if (/Mobi|Android/i.test(navigator.userAgent)) {
+            // Mobile device detected
+            document.body.style.fontSize = '1.6em';
+
+            // Adjust font size for table elements
+            var tableElements = document.querySelectorAll('.table');
+            for (var i = 0; i < tableElements.length; i++) {
+                tableElements[i].style.fontSize = '1.2em';
+            }
+
+            // Adjust font size for button elements
+            var btnElements = document.querySelectorAll('.btn');
+            for (var i = 0; i < btnElements.length; i++) {
+                btnElements[i].style.fontSize = '1.1em';
+            }
+
+            // Add any additional element selectors as needed
+            // For example: Adjust font size for specific headings, labels, etc.
+            // var customElements = document.querySelectorAll('h1, h2, .custom-class');
+            // for (var i = 0; i < customElements.length; i++) {
+            //     customElements[i].style.fontSize = '1.3em';
+            // }
+                        // Adjust Highcharts options for mobile
+            Highcharts.setOptions({
+                chart: {
+                    style: {
+                        fontFamily: 'Arial', // Set as needed
+                        fontSize: '0.9em' // Larger font size for better readability on mobile
+                    }
+                },
+                title: {
+                    style: {
+                        fontSize: '1.3em' // Larger title font size
+                    }
+                },
+                subtitle: {
+                    style: {
+                        fontSize: '1.3em' // Larger subtitle font size
+                    }
+                },
+                xAxis: {
+                    title: {
+                        style: {
+                            fontSize: '1.5em' // Larger axis labels
+                        }
+                    },
+                    labels: {
+                        style: {
+                            fontSize: '1.5em' // Larger font size for the yAxis labels
+                        }
+                    },
+                },
+                yAxis: {
+                    title: {
+                        style: {
+                            fontSize: '1.5em' // Larger axis labels
+                        }
+                    },
+                    labels: {
+                        style: {
+                            fontSize: '1.5em' // Larger font size for the yAxis labels
+                        }
+                    },
+                },
+                legend: {
+                    itemStyle: {
+                        fontSize: '2em' // Larger legend font size
+                    }
+                }
+                // Continue for other elements such as legend, tooltips, etc.
+            });
+
+            // Redraw the chart if it already exists
+            if($('#container').highcharts()) {
+                $('#container').highcharts().reflow();
+            }
+            
+        } else {
+            // Desktop device detected
+            document.body.style.fontSize = '1.0em';
+        }
+    }
+
+    window.onload = adjustFontSize;
+    </script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="text-Section">
+            <p style="text-align: left; font-weight: bold; font-size: 1.4em; margin-top: 0.5em; margin-bottom: 1.0em;">Results of PT INR Prediction on Fixed Dose of Warfarin</p>
+        </div>
+        
+        <!-- Table Display -->
+        <table class="table table-bordered">
+            <thead class="table-info">
+                <tr>
+                    <th style="text-align: center; vertical-align: middle; font-size: 1.0em;" rowspan="2">Warfarin<br>Dose</th>
+                    <th colspan="9" style="text-align: center;">PT INR</th>
+                </tr>
+                <tr>
+                    <th style="text-align: center; font-size: 1.0em;">Day 5</th>
+                    <th style="text-align: center; font-size: 1.0em;">Day 6</th>
+                    <th style="text-align: center; font-size: 1.0em;">Day 7</th>
+                    <th style="text-align: center; font-size: 1.0em;">Day 8</th>
+                    <th style="text-align: center; font-size: 1.0em;">Day 9</th>
+                    <th style="text-align: center; font-size: 1.0em;">Day 10</th>
+                    <th style="text-align: center; font-size: 1.0em;">Day 11</th>
+                    <th style="text-align: center; font-size: 1.0em;">Day 12</th>
+                    <th style="text-align: center; font-size: 1.0em;">Day 13</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dosage, row in table_warfarin %}
+                <tr class="{% if forloop.counter0 == target_warfarin_1 %}green-row bold-text{% elif forloop.counter0 == target_warfarin_2 %}lightgreen-row{% elif forloop.counter0 == target_warfarin_3 %}lighter-green-row{% endif %}">
+                    <td style="text-align: center;">{{ dosage }}</td>
+                    {% for item in row %}
+                        <td>{{ item }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p style="text-align: justify; font-size: 1.0em; margin-bottom: 0em;">* Green indicate the warfarin doses that are estimated to result in closest PT INR values to 2.0 at the end of prediction</p>
+        <p style="text-align: justify; font-size: 1.0em; margin-bottom: 1.0em;">* The estimated PT INR showed daily absolute average daily error of 0.17±0.17. Over the days, this error may increase further.</p>
+    </div>
+
+    <!-- Graph Display Button -->
+    <div class="container-fluid">
+        <button id="showGraph" class="btn btn-primary float: left;">Show Graph</button>
+        <button id="goBack" class="btn btn-secondary float-right" onclick="window.history.back();">Go Back</button>
+    </div>
+    <p>
+    </p>
+    <!-- Graph Container (Initially Hidden) -->
+    <figure class="highcharts-figure">
+        <div id="container" style="display: none; max-width: 100%; height: 700px; margin: 0 auto"></div>
+        <p class="highcharts-description">
+            
+        </p>
+    </figure>
+
+    <script>
+        $(document).ready(function() {
+            $('#showGraph').on('click', function() {
+                // Toggle the graph's visibility
+                $('#container').toggle();
+                
+                // Check if the graph is visible and change the button text accordingly
+                if($('#container').is(':visible')) {
+                    $(this).text('Hide Graph');
+                    renderChart();  // Render the chart only when showing it
+                } else {
+                    $(this).text('Show Graph');
+                }
+            });
+        });
+
+        function renderChart() {
+            if(!$('#container').highcharts()) {
+                Highcharts.chart('container', {
+                    title: {
+                        text: ' ',
+                        align: 'left'
+                    },
+                    subtitle: {
+                        text: ' ',
+                        align: 'left'
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'PTINR',
+                            style: {
+                                fontSize: '1.3em',
+                                fontWeight: 'bold'
+                            }
+                        },
+                        labels: {
+                            style: {
+                                fontSize: '1.1em'
+                            }
+                        },
+                        tickInterval: 0.5,
+                    },
+                    xAxis: {
+                        title: {
+                            text: 'Day',
+                            style: {
+                                fontSize: '1.3em',
+                                fontWeight: 'bold'
+                            }
+                        },
+                        labels: {
+                            style: {
+                                fontSize: '1.1em'
+                            }
+                        },
+                        accessibility: {
+                            rangeDescription: 'Range: 5 to 13'
+                        }
+                    },
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom',
+                        itemStyle: {
+                            fontSize: '1.2em' // Larger legend font size
+                        }
+                    },
+                    exporting: {
+                        buttons: {
+                            contextButton: {
+                                symbolSize: 30,  // Increase the size of the icon
+                                symbolStrokeWidth: 2,  // Adjust the stroke width as needed
+                                // Optionally adjust the position if needed
+                                x: -16,
+                                y: 4
+                            }
+                        }
+                    },
+                    plotOptions: {
+                        series: {
+                            label: {
+                                connectorAllowed: false
+                            },
+                            pointStart: 5
+                        }
+                    },
+                    series: [{
+                        name: 'WFR_0.5',
+                        data: {{dose_1}}
+                    }, {
+                        name: 'WFR_1.0',
+                        data: {{dose_2}}
+                    }, {
+                        name: 'WFR_1.5',
+                        data: {{dose_3}}
+                    }, {
+                        name: 'WFR_2.0',
+                        data: {{dose_4}}
+                    }, {
+                        name: 'WFR_2.5',
+                        data: {{dose_5}}
+                    }, {
+                        name: 'WFR_3.0',
+                        data: {{dose_6}}
+                    }, {
+                        name: 'WFR_3.5',
+                        data: {{dose_7}}
+                    }, {
+                        name: 'WFR_4.0',
+                        data: {{dose_8}}
+                    }, {
+                        name: 'WFR_4.5',
+                        data: {{dose_9}}
+                    }, {
+                        name: 'WFR_5.0',
+                        data: {{dose_10}}
+                    }, {
+                        name: 'WFR_5.5',
+                        data: {{dose_11}}
+                    }, {
+                        name: 'WFR_6.0',
+                        data: {{dose_12}}
+                    }, {
+                        name: 'WFR_6.5',
+                        data: {{dose_13}}
+                    }, {
+                        name: 'WFR_7.0',
+                        data: {{dose_14}}
+                    }, {
+                        name: 'WFR_7.5',
+                        data: {{dose_15}}
+                    }, {
+                        name: 'WFR_8.0',
+                        data: {{dose_16}}
+                    }],
+                    responsive: {
+                        rules: [{
+                            condition: {
+                            },
+                            chartOptions: {
+                                legend: {
+                                    layout: 'horizontal',
+                                    align: 'center',
+                                    verticalAlign: 'bottom'
+                                }
+                            }
+                        }]
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

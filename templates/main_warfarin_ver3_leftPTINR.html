@@ -1,0 +1,244 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+<style>
+    fieldset {
+        padding: 10px;
+        border: 1px solid #ddd;
+        margin-bottom: 20px;
+    }
+
+    legend {
+        padding: 0 5px;
+        font-weight: bold;
+    }
+
+    .margin_bot10 {
+        margin-bottom: 10px;
+    }
+
+    .margin_bot20 {
+        margin-bottom: 20px;
+    }
+
+    .img-full-width {
+        max-width: 100%; /* width: 100%; */
+        height: auto;
+    }
+</style>
+
+<!-- 세로 구성3 -->
+<div class="container-fluid my-3">
+    <form action="view_result" method="post">
+        {% csrf_token %}
+        <!-- Image Section -->
+        <div class="mb-3 text-center">
+            <img src="{% static 'image_main.png' %}" alt="Your Image" class="img-full-width">
+        </div>
+
+        <div class="text-Section">
+            <p style="text-align: center; font-weight: bold; font-size: 2em; margin-bottom: 0em;">AI Warfarin Dose Decision Aid</p>
+            <p style="text-align: right;"><span style="font-weight: bold;">Version 1.0</span> (Last updated: 2023.12.14)</p>
+        </div>
+
+        <div class="text-Section">
+            <h4 class="subtitle" style="font-weight: bold;">Terms of Use</h4>
+            <p style="text-align: justify; margin-left: 20px; margin-right: 20px;">Copyright on Hyoung Woo Chang, Heemoon Lee, and Hyun Joo Kim. This webpage and calculator (”AI-based Warfarin Dose Calculator") is provided "as is" - it is a free tool for unrestricted online use by clinicians and researchers alike. It will be irregularly updated and enhanced, so it is important to always use the online version. Users may not reverse engineer, disassemble, copy, download for offline use, or otherwise modify the content of this page without the express written permission of the three copyright possessors. ”AI-based Warfarin Dose Calculator" is Registered Trademark (TM) and may not be used without the express written permission of the copyright possessors. The responsibility for determining the warfarin dose in a real patient lies with the physician. <span style="color: red; text-decoration: underline; font-weight: bold;">It is strictly prohibited for non-medical people</span> to change the warfarin dose using this calculator. The calculation results of this algorithm are for reference purposes only.
+            </p>
+        </div>
+
+        <fieldset>
+            <div class="row mb-1 text-center">
+                <div class="col-sm-1">
+                    <label class="form-label" style="font-weight: bold; font-size: 1em;">Day</label>
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-label" style="font-weight: bold; font-size: 1em;">PT INR</label>
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-label" style="font-weight: bold; font-size: 1em;">Warfarin</label>
+                </div>
+            </div>
+
+            <div class="row mb-1">
+                <div class="col-sm-1 text-center">
+                    <label for="Day1" class="form-label" style="font-weight: bold; font-size: 1em;">1</label>
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" name="PTINR_1" id="PTINR_1" class="form-control" min="0.5" max="10.0" step="0.01" placeholder="0.5-10.0">
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" name="WFR_1" id="WFR_1" class="form-control" min="0" max="20" step="0.5" placeholder="0-20 mg">
+                </div>
+
+                <div class="col-sm-2 text-end">
+                    <label for="Sex" class="form-label" style="font-weight: bold; font-size: 1em;">Sex</label>
+                </div>
+                <div class="col-sm-3">
+                    <select name="gender" id="gender" class="form-control margin_bot20">
+                        <option value=1>Man</option>
+                        <option value=0>Woman</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-1">
+                <div class="col-sm-1 text-center">
+                    <label for="Day2" class="form-label" style="font-weight: bold; font-size: 1em;">2</label>
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" name="PTINR_2" id="PTINR_2" class="form-control" min="0.5" max="10.0" step="0.01" placeholder="0.5-10.0">
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" name="WFR_2" id="WFR_2" class="form-control" min="0" max="20" step="0.5" placeholder="0-20 mg">
+                </div>
+
+                <div class="col-sm-2 text-end">
+                    <label for="Age" class="form-label" style="font-weight: bold; font-size: 1em;">Age</label>
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" name="age" id="age" class="form-control margin_bot20" placeholder="18-95 years" min="18" max="95" step="1">
+                </div>
+            </div>
+
+            <div class="row mb-1">
+                <div class="col-sm-1 text-center">
+                    <label for="Day3" class="form-label" style="font-weight: bold; font-size: 1em;">3</label>
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" name="PTINR_3" id="PTINR_3" class="form-control" min="0.5" max="10.0" step="0.01" placeholder="0.5-10.0">
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" name="WFR_3" id="WFR_3" class="form-control" min="0" max="20" step="0.5" placeholder="0-20 mg">
+                </div>
+
+                <div class="col-sm-2 text-end">
+                    <label for="Weight" class="form-label" style="font-weight: bold; font-size: 1em;">Weight</label>
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" name="weight" id="weight" class="form-control margin_bot20" placeholder="30-120 kg" min="30" max="120" step="0.1">
+                </div>
+            </div>
+
+            <div class="row mb-1">
+                <div class="col-sm-1 text-center">
+                    <label for="Day4" class="form-label" style="font-weight: bold; font-size: 1em;">4</label>
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" name="PTINR_4" id="PTINR_4" class="form-control" min="0.5" max="10.0" step="0.01" placeholder="0.5-10.0">
+                </div>
+                <div class="col-sm-3">
+                    <!-- Empty column for spacing -->
+                </div>
+                <div class="col-sm-2 text-end">
+                    <label for="Height" class="form-label" style="font-weight: bold; font-size: 1em;">Height</label>
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" name="height" id="height" class="form-control margin_bot20" placeholder="120-210 cm" min="120" max="210" step="0.1">
+                </div>
+            </div>
+
+            <div class="row sm-3 mb-1" style="margin-left: 5px; margin-right: 5px;">
+                <input type="submit" value="Prediction" class="btn btn-primary btn-lg large-button" style="font-weight: bold; font-size: 1.2em;">
+            </div>
+        </fieldset>
+
+        <div class="row mt-0">
+            <p style="text-align: justify; margin-top: 0em;">Article:
+                <a href="https://www.nature.com/articles/s41598-021-94305-2" target="_blank" style="text-decoration:none;">Development of a system to support warfarin dose decisions using deep neural networks</a> 
+            </p>
+        </div>
+
+        <!-- Contributors Information -->
+        <div class="text-Section mt-2">
+            <h4 class="subtitle" style="font-weight: bold;">Contributors: (Republic of Korea)</h4>
+            <div class="row mb-0">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+                    <p style="text-align: right;"><a href="https://www.snubh.org/common/popup/drIntroduce_view.do?sDpCdDtl=TS&sDrSid=1004604&sDrStfNo=65934&S_DP_CD=TS&MENU_ID=001001&DP_CD=EN" style="text-decoration:none;">Hyoung Woo Chang, MD, PhD</a></p>
+                </div>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-10">
+                    <p style="text-align: left;">Department of Thoracic and Cardiovascular Surgery, Seoul National University Bundang Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+                    <p style="text-align: right;"><a href="https://www.linkedin.com/in/rmrdud/" style="text-decoration:none;">Geuk Young Jang, PhD</a></p>
+                </div>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-10">
+                    <p style="text-align: left;">Department of Thoracic and Cardiovascular Surgery, Seoul National University Bundang Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+                    <p style="text-align: right;"><a href="https://en.sejongh.co.kr/sejong/staff/info?orddrid=721" style="text-decoration:none;">Heemoon Lee, MD, PhD</a></p>
+                </div>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-10">
+                    <p style="text-align: left;">Department of Thoracic and Cardiovascular Surgery, Sejong General Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+                    <p style="text-align: right;"><a href="https://sev.severance.healthcare/sev-en/doctor/doctor-view.do?empNo=eXVoczIwMjBAKUApMuAmikETFcBKVaDJDBFIM%2BbDsiNNxQq7PWWkRhAGphE%3D" style="text-decoration:none;">Hyun Joo Kim, MD, PhD</a></p>
+                </div>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-10">
+                    <p style="text-align: left;">Department of Anesthesiology and Pain Medicine, Severance Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+                    <p style="text-align: right;"><a href="https://www.snubh.org/common/popup/drIntroduce_view.do?sDpCdDtl=TS&sDrSid=1002934&sDrStfNo=65898&S_DP_CD=TS&MENU_ID=001001&DP_CD=EN" style="text-decoration:none;">Dong Jung Kim, MD</a></p>
+                </div>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-10">
+                    <p style="text-align: left;">Department of Thoracic and Cardiovascular Surgery, Seoul National University Bundang Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+                    <p style="text-align: right;">Jonghoon Mo, MA</p>
+                </div>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-10">
+                    <p style="text-align: left;">Naver AI Laboratory</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2">
+                    <p style="text-align: right;">Ji-Eon Kim, MSc.</p>
+                </div>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-10">
+                    <p style="text-align: left;">Wonkwang University Medical Convergence Research Center</p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    function adjustFontSize() {
+        if (/Mobi|Android/i.test(navigator.userAgent)) {
+            // Mobile device detected
+            document.body.style.fontSize = '1.6em';
+
+            // Adjust font size for h4 elements
+            var h4Elements = document.querySelectorAll('h4');
+            for (var i = 0; i < h4Elements.length; i++) {
+                h4Elements[i].style.fontSize = '1.2em';
+            }
+
+            // Adjust font size for placeholders in inputs and textareas
+            var inputElements = document.querySelectorAll('input[placeholder], textarea[placeholder]');
+            for (var i = 0; i < inputElements.length; i++) {
+                inputElements[i].style.fontSize = '1.2em';
+            }
+
+            // Adjust font size for select elements
+            var selectElements = document.querySelectorAll('select');
+            for (var i = 0; i < selectElements.length; i++) {
+                selectElements[i].style.fontSize = '1.2em';
+            }
+        } else {
+            // Desktop device detected
+            document.body.style.fontSize = '1.0em';
+        }
+    }
+
+    window.onload = adjustFontSize;
+</script>

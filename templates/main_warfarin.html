@@ -1,0 +1,374 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+<style>
+    fieldset {
+        padding: 10px;
+        border: 1px solid #ddd;
+        margin: 0 auto;
+        margin-bottom: 20px;
+        text-align: center;
+        max-width: 1000px;
+    }
+
+    legend {
+        padding: 0 5px;
+        font-weight: bold;
+    }
+
+    .width_limit {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .margin_bot10 {
+        margin-bottom: 10px;
+    }
+
+    .margin_bot20 {
+        margin-bottom: 20px;
+    }
+
+    .img-full-width {
+        max-width: 100%; /* width: 100%; */
+        height: auto;
+    }
+</style>
+
+<!--  -->
+<div class="container-fluid my-3">
+    <form action="view_result" method="post">
+        {% csrf_token %}
+        <!-- Start of Image Section -->
+        <div class="text-center">
+            <img src="{% static 'image_main.png' %}" alt="Your Image" class="img-full-width" style="max-width: 1000px; width: 100%; height: auto;" onclick="location.reload();">
+
+            <p class="width_limit" style="text-align: right;"><span style="font-weight: bold;">Version 1.0</span><br>(Last updated: 2023.12.14)<br>&nbsp</p>
+
+        </div>
+        <!-- End of Image Section -->
+
+        <!--
+        <div class="text-Section">
+            <p style="text-align: center; font-weight: bold; font-size: 2em; margin-bottom: 0em;">AI Warfarin Dose Decision Aid</p>
+        
+            <p style="text-align: right;"><span style="font-weight: bold;">Version 1.0</span> (Last updated: 2023.12.14)</p>
+        </div>
+        -->
+        
+        <!-- Start of Version & Reset -->
+        <!--     
+        <div class="container" style="max-width: 1000px;">
+            <div class="row d-flex align-items-end" style="margin-top: 0; margin-bottom: 0;">
+                <div class="col-sm-6">
+                    <input type="reset" value="New" class="btn btn-secondary" style="font-weight:bold; font-size: 0.9em; margin-left: 0; margin-bottom: 0;">
+                </div>
+                <div class="col-sm-6">
+                    <p class="width_limit" style="text-align: right; margin-top: 0;"><span style="font-weight: bold;">Version 1.0</span><br>(Last updated: 2023.12.14)<br><span style="font-size: 0.1em;">&nbsp </span></p>
+                </div>
+            </div>
+        </div>
+        -->
+        
+        <!-- End of Version & Reset -->
+        
+        <!-- Start of field -->
+        <fieldset>
+            <!-- Labels -->
+            <div class="row mb-1 text-center">
+                
+                <div class="col-sm-1">
+                    <label class="form-label" style="font-weight: bold; font-size: 1em;">Day</label>
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-label" style="font-weight: bold; font-size: 1em;">PT INR</label>
+                </div>
+                <div class="col-sm-3">
+                    <label class="form-label" style="font-weight: bold; font-size: 1em;">Warfarin</label>
+                </div>
+                <!--
+                <div class="col-sm-5 text-end margin_bot10">
+                    <input type="reset" value="Clear" class="btn btn-secondary" style="font-weight:bold; font-size: 0.9em; margin-right: 5px; background-color: red;">
+                </div>  
+                -->               
+            <!-- row 1 -->         
+            <div class="row mb-1">
+                <div class="col-sm-1 text-center">
+                    <label for="Day1" class="form-label" style="font-weight: bold; font-size: 1em;">1</label>
+                </div>
+                <!-- PTINR_1 -->
+                <div class="col-sm-3">
+                    <input type="number" name="PTINR_1" tabindex="1" id="PTINR_1" class="form-control" min="0.5" max="10.0" step="0.01" placeholder="0.5-10.0" required oninvalid="this.setCustomValidity('Please enter the PT INR for Day 1')" oninput="this.setCustomValidity('')">
+                </div>
+                <!-- WFR_1 -->
+                <div class="col-sm-3">
+                    <input type="number" name="WFR_1" tabindex="5" id="WFR_1" class="form-control" min="0" max="20" step="0.01" placeholder="0-20 mg" required oninvalid="this.setCustomValidity('Please enter the Warfarin for Day 1')" oninput="this.setCustomValidity('')">
+                </div>
+
+                <!-- Height -->
+                <div class="col-sm-2 text-end">
+                    <label for="Height" class="form-label" style="font-weight: bold; font-size: 1em;">Height</label>
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" name="height" tabindex="8" id="height" class="form-control margin_bot20" min="120" max="210" step="0.01" placeholder="120-210 cm" required oninvalid="this.setCustomValidity('Please enter the Height')" oninput="this.setCustomValidity('')">
+                </div>
+            </div>
+
+            <!-- row 2 --> 
+            <div class="row mb-1">
+                <div class="col-sm-1 text-center">
+                    <label for="Day2" class="form-label" style="font-weight: bold; font-size: 1em;">2</label>
+                </div>
+                <!-- PTINR_2 -->
+                <div class="col-sm-3">
+                    <input type="number" name="PTINR_2" tabindex="2" id="PTINR_2" class="form-control" min="0.5" max="10.0" step="0.01" placeholder="0.5-10.0" required oninvalid="this.setCustomValidity('Please enter the PT INR for Day 2')" oninput="this.setCustomValidity('')">
+                </div>
+                <!-- WFR_2 -->
+                <div class="col-sm-3">
+                    <input type="number" name="WFR_2" tabindex="6" id="WFR_2" class="form-control" min="0" max="20" step="0.01" placeholder="0-20 mg" required oninvalid="this.setCustomValidity('Please enter the Warfarin for Day 2')" oninput="this.setCustomValidity('')">
+                </div>
+
+                <!-- Weight -->
+                <div class="col-sm-2 text-end">
+                    <label for="Weight" class="form-label" style="font-weight: bold; font-size: 1em;">Weight</label>
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" name="weight" tabindex="9" id="weight" class="form-control margin_bot20" min="30" max="120" step="0.01" placeholder="30-120 kg" required oninvalid="this.setCustomValidity('Please enter the Weight')" oninput="this.setCustomValidity('')">
+                </div>
+            </div>
+
+            <!-- row 3 --> 
+            <div class="row mb-1">
+                <div class="col-sm-1 text-center">
+                    <label for="Day3" class="form-label" style="font-weight: bold; font-size: 1em;">3</label>
+                </div>
+                <!-- PTINR_3 --> 
+                <div class="col-sm-3">
+                    <input type="number" name="PTINR_3" tabindex="3" id="PTINR_3" class="form-control" min="0.5" max="10.0" step="0.01" placeholder="0.5-10.0" required oninvalid="this.setCustomValidity('Please enter the PT INR for Day 3')" oninput="this.setCustomValidity('')">
+                </div>
+                <!-- WFR_3 --> 
+                <div class="col-sm-3">
+                    <input type="number" name="WFR_3" tabindex="7" id="WFR_3" class="form-control" min="0" max="20" step="0.01" placeholder="0-20 mg" required oninvalid="this.setCustomValidity('Please enter the Warfarin for Day 3')" oninput="this.setCustomValidity('')">
+                </div>
+                
+                <!-- Age -->
+                <div class="col-sm-2 text-end">
+                    <label for="Age" class="form-label" style="font-weight: bold; font-size: 1em;">Age</label>
+                </div>
+                <div class="col-sm-3">
+                    <input type="number" name="age" tabindex="10" id="age" class="form-control margin_bot20" placeholder="18-95 years" min="18" max="95" step="1" required oninvalid="this.setCustomValidity('Please enter the Age')" oninput="this.setCustomValidity('')">
+                </div>
+            </div>
+
+            <!-- row 4 --> 
+            <div class="row mb-1">
+                <div class="col-sm-1 text-center">
+                    <label for="Day4" class="form-label" style="font-weight: bold; font-size: 1em;">4</label>
+                </div>
+                <!-- PTINR_4 --> 
+                <div class="col-sm-3">
+                    <input type="number" name="PTINR_4" tabindex="4" id="PTINR_4" class="form-control" min="0.5" max="10.0" step="0.01" placeholder="0.5-10.0" required oninvalid="this.setCustomValidity('Please enter the PT INR for Day 4')" oninput="this.setCustomValidity('')">
+                </div>
+                <div class="col-sm-3">
+                    <!-- Empty column for spacing -->
+                </div>
+                
+                <!-- sex --> 
+                <div class="col-sm-2 text-end">
+                    <label for="Sex" class="form-label" style="font-weight: bold; font-size: 1em;">Sex</label>
+                </div>
+                <div class="col-sm-3">
+                    <select name="gender" tabindex="11" id="gender" class="form-control margin_bot20" required oninvalid="this.setCustomValidity('Please select Man or Woman')" oninput="this.setCustomValidity('')">
+                        <option value="" selected disabled></option>
+                        <option value=1>Man</option>
+                        <option value=0>Woman</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row sm-3 mb-1" style="margin-left: 5px; margin-right: 5px;">
+                <input type="submit" id="predictionButton" tabindex="12" value="Prediction" class="btn btn-primary btn-lg large-button" style="font-weight: bold; font-size: 1.2em;">
+            </div>
+        </fieldset>
+        <!-- End of field -->
+        
+        
+        <!-- Start of Terms of use -->
+        <div class="text-Section width_limit">
+            <h4 class="subtitle" style="font-weight: bold;">Terms of Use</h4>
+            <p style="text-align: justify; margin-left: 1em; margin-right: 1em;">Copyright on Hyoung Woo Chang, Heemoon Lee, and Hyun Joo Kim. This webpage and calculator (”AI-based Warfarin Dose Calculator") is provided "as is" - it is a free tool for unrestricted online use by clinicians and researchers alike. It will be irregularly updated and enhanced, so it is important to always use the online version. Users may not reverse engineer, disassemble, copy, download for offline use, or otherwise modify the content of this page without the express written permission of the three copyright possessors. ”AI-based Warfarin Dose Calculator" is Registered Trademark (TM) and may not be used without the express written permission of the copyright possessors. The responsibility for determining the warfarin dose in a real patient lies with the physician. <span style="color: red; text-decoration: underline; font-weight: bold;">It is strictly prohibited for non-medical people</span> to change the warfarin dose using this calculator. The calculation results of this algorithm are for reference purposes only.
+            </p>
+        </div>
+        <!-- End of Terms of use -->
+        
+        
+        <!-- Start of Article -->
+        <div class="text-Section width_limit">
+            <p style="text-align: justify; margin-left: 1em; margin-right: 1em; margin-top: 0em; margin-bottom: 2em">Article:
+                <a href="https://www.nature.com/articles/s41598-021-94305-2" target="_blank" style="text-decoration:none; font-weight: bold;">Development of a system to support warfarin dose decisions using deep neural networks</a> 
+            </p>
+        </div>
+        <!-- End of Article -->
+        
+        
+        <!-- Start of Contributors Information -->
+        <div class="text-Section width_limit">
+            <h4 class="subtitle" style="font-weight: bold;">Contributors: (Republic of Korea)</h4>
+
+            <p style="text-align: left; margin-left: 1em; margin-right: 1em; margin-bottom: 0;"><a href="https://www.snubh.org/common/popup/drIntroduce_view.do?sDpCdDtl=TS&sDrSid=1004604&sDrStfNo=65934&S_DP_CD=TS&MENU_ID=001001&DP_CD=EN" style="text-decoration:none; font-weight: bold;">Hyoung&nbsp;Woo&nbsp;Chang, MD, PhD</a></p>
+            <p style="text-align: justify; margin-left: 2em; margin-right: 1em; margin-top: 0;">Department of Thoracic and Cardiovascular Surgery, Seoul National University Bundang Hospital</p>
+
+            <p style="text-align: left; margin-left: 1em; margin-right: 1em; margin-bottom: 0;"><a href="https://www.linkedin.com/in/rmrdud/" style="text-decoration:none; font-weight: bold;">Geuk&nbsp;Young&nbsp;Jang, PhD</a>
+            <p style="text-align: justify; margin-left: 2em; margin-right: 1em; margin-top: 0;">Department of Thoracic and Cardiovascular Surgery, Seoul National University Bundang Hospital</p>
+
+            <p style="text-align: left; margin-left: 1em; margin-right: 1em; margin-bottom: 0;"><a href="https://en.sejongh.co.kr/sejong/staff/info?orddrid=721" style="text-decoration:none; font-weight: bold;">Heemoon&nbsp;Lee, MD, PhD</a></p>
+            <p style="text-align: justify; margin-left: 2em; margin-right: 1em; margin-top: 0;">Department of Thoracic and Cardiovascular Surgery, Sejong General Hospital</p>
+                
+            <p style="text-align: left; margin-left: 1em; margin-right: 1em; margin-bottom: 0;"><a href="https://sev.severance.healthcare/sev-en/doctor/doctor-view.do?empNo=eXVoczIwMjBAKUApMuAmikETFcBKVaDJDBFIM%2BbDsiNNxQq7PWWkRhAGphE%3D" style="text-decoration:none; font-weight: bold;">Hyun&nbsp;Joo&nbsp;Kim, MD, PhD</a></p>
+            <p style="text-align: justify; margin-left: 2em; margin-right: 1em; margin-top: 0;">Department of Anesthesiology and Pain Medicine, Severance Hospital</p>
+                
+            <p style="text-align: left; margin-left: 1em; margin-right: 1em; margin-bottom: 0;"><a href="https://www.snubh.org/common/popup/drIntroduce_view.do?sDpCdDtl=TS&sDrSid=1002934&sDrStfNo=65898&S_DP_CD=TS&MENU_ID=001001&DP_CD=EN" style="text-decoration:none; font-weight: bold;">Dong&nbsp;Jung&nbsp;Kim, MD</a></p>
+            <p style="text-align: justify; margin-left: 2em; margin-right: 1em; margin-top: 0;">Department of Thoracic and Cardiovascular Surgery, Seoul National University Bundang Hospital</p>
+                
+            <p style="text-align: left; margin-left: 1em; margin-right: 1em; margin-bottom: 0; font-weight: bold;">Jonghoon&nbsp;Mo, MA</p>
+            <p style="text-align: justify; margin-left: 2em; margin-right: 1em; margin-top: 0;">Naver AI Laboratory</p>
+                
+            <p style="text-align: left; margin-left: 1em; margin-right: 1em; margin-bottom: 0; font-weight: bold;">Ji-Eon&nbsp;Kim, MSc.</p>
+            <p style="text-align: justify; margin-left: 2em; margin-right: 1em; margin-top: 0;">Wonkwang University Medical Convergence Research Center</p>
+                
+   
+        </div>
+        
+        <!--
+        <div class="text-Section mt-2 width_limit">
+            <h4 class="subtitle" style="font-weight: bold;">Contributors: (Republic of Korea)</h4>
+            <div class="row mb-0">
+                <div class="col-sm-4">
+                    <p style="text-align: right;"><a href="https://www.snubh.org/common/popup/drIntroduce_view.do?sDpCdDtl=TS&sDrSid=1004604&sDrStfNo=65934&S_DP_CD=TS&MENU_ID=001001&DP_CD=EN" style="text-decoration:none;">Hyoung&nbsp;Woo&nbsp;Chang, MD, PhD</a></p>
+                </div>
+                <div class="col-sm-8">
+                    <p style="text-align: left;">Department of Thoracic and Cardiovascular Surgery, Seoul National University Bundang Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-sm-4">
+                    <p style="text-align: right;"><a href="https://www.linkedin.com/in/rmrdud/" style="text-decoration:none;">Geuk&nbsp;Young&nbsp;Jang, PhD</a></p>
+                </div>
+                <div class="col-sm-8">
+                    <p style="text-align: left;">Department of Thoracic and Cardiovascular Surgery, Seoul National University Bundang Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-sm-4">
+                    <p style="text-align: right;"><a href="https://en.sejongh.co.kr/sejong/staff/info?orddrid=721" style="text-decoration:none;">Heemoon&nbsp;Lee, MD, PhD</a></p>
+                </div>
+                <div class="col-sm-8">
+                    <p style="text-align: left;">Department of Thoracic and Cardiovascular Surgery, Sejong General Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-sm-4">
+                    <p style="text-align: right;"><a href="https://sev.severance.healthcare/sev-en/doctor/doctor-view.do?empNo=eXVoczIwMjBAKUApMuAmikETFcBKVaDJDBFIM%2BbDsiNNxQq7PWWkRhAGphE%3D" style="text-decoration:none;">Hyun&nbsp;Joo&nbsp;Kim, MD, PhD</a></p>
+                </div>
+                <div class="col-sm-8">
+                    <p style="text-align: left;">Department of Anesthesiology and Pain Medicine, Severance Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-sm-4">
+                    <p style="text-align: right;"><a href="https://www.snubh.org/common/popup/drIntroduce_view.do?sDpCdDtl=TS&sDrSid=1002934&sDrStfNo=65898&S_DP_CD=TS&MENU_ID=001001&DP_CD=EN" style="text-decoration:none;">Dong&nbsp;Jung&nbsp;Kim, MD</a></p>
+                </div>
+                <div class="col-sm-8">
+                    <p style="text-align: left;">Department of Thoracic and Cardiovascular Surgery, Seoul National University Bundang Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-sm-4">
+                    <p style="text-align: right;">Jonghoon&nbsp;Mo, MA</p>
+                </div>
+                <div class="col-sm-8">
+                    <p style="text-align: left;">Naver AI Laboratory</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-sm-4">
+                    <p style="text-align: right;">Ji-Eon&nbsp;Kim, MSc.</p>
+                </div>
+                <div class="col-sm-8">
+                    <p style="text-align: left;">Wonkwang University Medical Convergence Research Center</p>
+                </div>
+            </div>
+        </div> -->
+        <!-- End of Contributors Information -->
+    </form>
+</div>
+
+<script>
+    function adjustMobile() {
+        var imageElement = document.querySelector('img.img-full-width');
+        var widthLimitElement = document.querySelector('.width_limit');
+        
+        if (/Mobi|Android/i.test(navigator.userAgent)) {
+            // Mobile device detected
+            imageElement.src = '{% static "image_main_m.png" %}';
+            document.body.style.fontSize = '2.2em';
+
+            // Adjust font size for h4 elements
+            var h4Elements = document.querySelectorAll('h4');
+            for (var i = 0; i < h4Elements.length; i++) {
+                h4Elements[i].style.fontSize = '1.2em';
+            }
+
+            // Adjust font size for placeholders in inputs and textareas
+            var inputElements = document.querySelectorAll('input[placeholder], textarea[placeholder]');
+            for (var i = 0; i < inputElements.length; i++) {
+                inputElements[i].style.fontSize = '1.2em';
+            }
+
+            // Adjust font size for select elements
+            var selectElements = document.querySelectorAll('select');
+            for (var i = 0; i < selectElements.length; i++) {
+                selectElements[i].style.fontSize = '1.2em';
+            }
+        } else {
+            // Desktop device detected
+            imageElement.src = '{% static "image_main.png" %}';
+            document.body.style.fontSize = '1.0em';
+        }
+    }    
+    
+    // Get the button element (Prediction Button toggle)
+    var predictionButton = document.getElementById('predictionButton');
+    var form = predictionButton.closest('form');
+
+    // Function to set the button to its default state
+    function resetButton() {
+        predictionButton.disabled = false;
+        predictionButton.value = 'Prediction';
+    }
+
+    // Add click event listener to the form submit
+    form.addEventListener('submit', function() {
+        // Check if all required fields are filled
+        if (!this.checkValidity()) {
+            this.reportValidity();
+            return; // Exit if any field is not valid
+        }
+
+        // Change button state to indicate loading
+        predictionButton.disabled = true;
+        predictionButton.value = 'Calculating...';
+    });
+
+    // Event listener for when the page is shown (including from cache)
+    window.addEventListener('pageshow', function(event) {
+        // Check if the page is loaded from the cache
+        if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
+            resetButton(); // Reset the button to its default state
+        }
+    });
+        
+    window.onload = function() {
+        adjustMobile();
+        adjustImageForDevice();
+    };
+</script>

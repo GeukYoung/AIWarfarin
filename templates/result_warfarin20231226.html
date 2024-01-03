@@ -1,0 +1,185 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>PTINR Graph and Table</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <style>
+        .green-row {
+            background-color: lightgreen;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Table Display -->
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Dose</th>
+                    <th>Day 5</th>
+                    <th>Day 6</th>
+                    <th>Day 7</th>
+                    <th>Day 8</th>
+                    <th>Day 9</th>
+                    <th>Day 10</th>
+                    <th>Day 11</th>
+                    <th>Day 12</th>
+                    <th>Day 13</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in table_warfarin %}
+                <tr class="{% if forloop.counter0 == target_warfarin %}green-row{% endif %}">
+                    <td>{{ forloop.counter }}</td>
+                    {% for item in row %}
+                        <td>{{ item }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Graph Display Button -->
+    <div class="container-fluid">
+        <button id="showGraph" class="btn btn-primary float: left;">Show Graph</button>
+        <p>
+        </p>
+    </div>
+
+    <!-- Graph Container (Initially Hidden) -->
+    <figure class="highcharts-figure">
+        <div id="container" style="display: none;"></div>
+        <p class="highcharts-description">
+            
+        </p>       
+    </figure>
+
+    <script>
+        $(document).ready(function() {
+            $('#showGraph').on('click', function() {
+                // Toggle the graph's visibility
+                $('#container').toggle();
+                
+                // Check if the graph is visible and change the button text accordingly
+                if($('#container').is(':visible')) {
+                    $(this).text('Hide Graph');
+                    renderChart();  // Render the chart only when showing it
+                } else {
+                    $(this).text('Show Graph');
+                }
+            });
+        });
+
+        function renderChart() {
+            if(!$('#container').highcharts()) {
+                Highcharts.chart('container', {
+                    title: {
+                        text: ' ',
+                        align: 'left'
+                    },
+                    subtitle: {
+                        text: ' ',
+                        align: 'left'
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'PTINR'
+                        }
+                    },
+                    xAxis: {
+                        accessibility: {
+                            rangeDescription: 'Range: 5 to 13'
+                        }
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'middle'
+                    },
+                    plotOptions: {
+                        series: {
+                            label: {
+                                connectorAllowed: false
+                            },
+                            pointStart: 5
+                        }
+                    },
+                    series: [{
+                        name: 'WFR_0.5',
+                        data: {{dose_1}}
+                    }, {
+                        name: 'WFR_1.0',
+                        data: {{dose_2}}
+                    }, {
+                        name: 'WFR_1.5',
+                        data: {{dose_3}}
+                    }, {
+                        name: 'WFR_2.0',
+                        data: {{dose_4}}
+                    }, {
+                        name: 'WFR_2.5',
+                        data: {{dose_5}}
+                    }, {
+                        name: 'WFR_3.0',
+                        data: {{dose_6}}
+                    }, {
+                        name: 'WFR_3.5',
+                        data: {{dose_7}}
+                    }, {
+                        name: 'WFR_4.0',
+                        data: {{dose_8}}
+                    }, {
+                        name: 'WFR_4.5',
+                        data: {{dose_9}}
+                    }, {
+                        name: 'WFR_5.0',
+                        data: {{dose_10}}
+                    }, {
+                        name: 'WFR_5.5',
+                        data: {{dose_11}}
+                    }, {
+                        name: 'WFR_6.0',
+                        data: {{dose_12}}
+                    }, {
+                        name: 'WFR_6.5',
+                        data: {{dose_13}}
+                    }, {
+                        name: 'WFR_7.0',
+                        data: {{dose_14}}
+                    }, {
+                        name: 'WFR_7.5',
+                        data: {{dose_15}}
+                    }, {
+                        name: 'WFR_8.0',
+                        data: {{dose_16}}
+                    }],
+                    responsive: {
+                        rules: [{
+                            condition: {
+                                maxWidth: 500
+                            },
+                            chartOptions: {
+                                legend: {
+                                    layout: 'horizontal',
+                                    align: 'center',
+                                    verticalAlign: 'bottom'
+                                }
+                            }
+                        }]
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

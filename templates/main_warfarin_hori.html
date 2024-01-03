@@ -1,0 +1,225 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap.min.css' %}">
+<style>
+    .text-section p {
+        font-size: 1em;
+    }
+
+    @media only screen and (max-width: 968px){
+        .text-section p{
+            font-size: 1em;
+        }
+    }
+
+    fieldset {
+        padding: 10px;
+        border: 1px solid #ddd;
+        margin-bottom: 20px;
+    }
+
+    legend {
+        padding: 0 5px;
+        font-weight: bold;
+    }
+
+    .margin_bot10 {
+        margin-bottom: 10px;
+    }
+
+    .margin_bot20 {
+        margin-bottom: 20px;
+    }
+    
+</style>
+<!-- 가로 구성 -->
+<div class="container-fluid my-3">
+    <form action="view_result" method="post">
+        {% csrf_token %}
+        <!-- Image Section -->
+        <div class="mb-3 text-center">
+            <img src="{% static 'image_main.png' %}" alt="Your Image" class="img-fluid">
+        </div>
+
+        {% comment %} <div class="mb-3 text-left">
+            <h3 class="bold-title">Patient Information</h3>
+        </div> {% endcomment %}
+
+        <p style="text-align: right;"><span style="font-weight: bold;">Version 1.0</span> (Last updated: 2023.12.14)</p>
+
+        <div class="text-Section">
+            <h4 class="subtitle">Terms of Use</h4>
+            <p style="text-align: justify;">Copyright on Hyoung Woo Chang, Heemoon Lee, and Hyun Joo Kim. This webpage and calculator (”AI-based Warfarin Dose Calculator") is provided "as is" - it is a free tool for unrestricted online use by clinicians and researchers alike. It will be irregularly updated and enhanced, so it is important to always use the online version. Users may not reverse engineer, disassemble, copy, download for offline use, or otherwise modify the content of this page without the express written permission of the three copyright possessors. ”AI-based Warfarin Dose Calculator" is Registered Trademark (TM) and may not be used without the express written permission of the copyright possessors. The responsibility for determining the warfarin dose in a real patient lies with the physician. <span style="color: red; text-decoration: underline; font-weight: bold;">It is strictly prohibited for non-medical people</span> to change the warfarin dose using this calculator. The calculation results of this algorithm are for reference purposes only.
+            </p>
+        </div>
+
+        <fieldset>
+            <div class="row sm-3">
+                <!-- Gender & Age -->
+                <div class="col-sm-3">
+                    <label for="gender" class="form-label">Sex: </label>
+                    <select name="gender" id="gender" class="form-control margin_bot20">
+                        <option value=1>Man</option>
+                        <option value=0>Woman</option>
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <label for="age" class="form-label">Age: </label>
+                    <input type="number" name="age" id="age" class="form-control margin_bot20" placeholder="18-95 years" min="18" max="95" step="1">
+                </div>
+                <!-- Weight & Height -->
+                <div class="col-sm-3">
+                    <label for="height" class="form-label">Height: </label>
+                    <input type="number" name="height" id="height" class="form-control margin_bot20" placeholder="120-210 cm" min="120" max="210" step="0.1">
+                </div>
+                <div class="col-sm-3">
+                    <label for="weight" class="form-label">Body weight: </label>
+                    <input type="number" name="weight" id="weight" class="form-control margin_bot20" placeholder="30-120 kg" min="30" max="120" step="0.1">
+                </div>
+            </div>
+        </fieldset>
+        <!-- Medication Information -->
+        {% comment %} <div class="mb-3 text-left">
+            <h3 class="bold-title">Medication Information</h3>
+        </div> {% endcomment %}
+
+        <!-- PTINR & WFR Row Titles -->
+        <fieldset>
+        <div class="row mb-1 text-center">
+            <div class="col-sm-2">
+                <!-- Empty column for spacing -->
+            </div>
+            <div class="col-sm-2">
+                <label class="form-label">DAY 1</label>
+            </div>
+            <div class="col-sm-2">
+                <label class="form-label">DAY 2</label>
+            </div>
+            <div class="col-sm-2">
+                <label class="form-label">DAY 3</label>
+            </div>
+            <div class="col-sm-2">
+                <label class="form-label">DAY 4</label>
+            </div>
+            <div class="col-sm-2">
+                <!-- Empty column for spacing -->
+            </div>
+        </div>
+
+        <!-- PTINR Rows -->
+        <div class="row mb-3">
+            <div class="col-sm-2">
+                <label for="PTINR" class="form-label">PT INR</label>
+            </div>
+            <div class="col-sm-2">
+                <input type="number" name="PTINR_1" id="PTINR_1" class="form-control" min="0.5" max="10.0" step="0.01" placeholder="0.5-10.0">
+            </div>
+            <div class="col-sm-2">
+                <input type="number" name="PTINR_2" id="PTINR_2" class="form-control" min="0.5" max="10.0" step="0.01" placeholder="0.5-10.0">
+            </div>
+            <div class="col-sm-2">
+                <input type="number" name="PTINR_3" id="PTINR_3" class="form-control" min="0.5" max="10.0" step="0.01" placeholder="0.5-10.0">
+            </div>
+            <div class="col-sm-2">
+                <input type="number" name="PTINR_4" id="PTINR_4" class="form-control" min="0.5" max="10.0" step="0.01" placeholder="0.5-10.0">
+            </div>
+            <div class="col-sm-2">
+                <!-- Empty column for spacing -->
+            </div>
+        </div>
+
+        <!-- WFR Rows -->
+        <div class="row mb-3">
+            <div class="col-sm-2">
+                <label for="WFR" class="form-label">Warfarin</label>
+            </div>
+            <div class="col-sm-2">
+                <input type="number" name="WFR_1" id="WFR_1" class="form-control" min="0" max="20" step="0.01" placeholder="0-20 mg">
+            </div>
+            <div class="col-sm-2">
+                <input type="number" name="WFR_2" id="WFR_2" class="form-control" min="0" max="20" step="0.01" placeholder="0-20 mg">
+            </div>
+            <div class="col-sm-2">
+                <input type="number" name="WFR_3" id="WFR_3" class="form-control" min="0" max="20" step="0.01" placeholder="0-20 mg">
+            </div>
+            <div class="col-sm-2">
+                <!-- Empty column for spacing -->
+            </div>
+            <div class="col-sm-2">
+                <!-- Empty column for spacing -->
+            </div>
+        </div>
+        </fieldset>
+        <div class="row mb-3">
+            <input type="submit" value="Prediction" class="btn btn-primary btn-lg large-button">
+        </div>
+
+        <div class="row mb-3">
+        </div>
+
+        <div class="text-Section">
+            <h4 class="subtitle">Contributors: (Republic of Korea)</h4>
+            <div class="row mb-0">
+                <div class="col-sm-3">
+                    <p style="text-align: right;">Hyoung Woo Chang, MD, PhD</p>
+                </div>
+                <div class="col-sm-9">
+                    <p style="text-align: left;">Department of Thoracic and Cardiovascular Surgery, Seoul National University Bundang Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-sm-3">
+                    <p style="text-align: right;">Geuk Young Jang, PhD</p>
+                </div>
+                <div class="col-sm-9">
+                    <p style="text-align: left;">Department of Thoracic and Cardiovascular Surgery, Seoul National University Bundang Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-sm-3">
+                    <p style="text-align: right;">Heemoon Lee, MD, PhD</p>
+                </div>
+                <div class="col-sm-9">
+                    <p style="text-align: left;">Department of Thoracic and Cardiovascular Surgery, Sejong General Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-sm-3">
+                    <p style="text-align: right;">Hyun Joo Kim, MD, PhD</p>
+                </div>
+                <div class="col-sm-9">
+                    <p style="text-align: left;">Department of Anesthesiology and Pain Medicine, Severance Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-sm-3">
+                    <p style="text-align: right;">Dong Jung Kim, MD</p>
+                </div>
+                <div class="col-sm-9">
+                    <p style="text-align: left;">Department of Thoracic and Cardiovascular Surgery, Seoul National University Bundang Hospital</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-sm-3">
+                    <p style="text-align: right;">Jonghoon Mo, MA</p>
+                </div>
+                <div class="col-sm-9">
+                    <p style="text-align: left;">Kakao AI Laboratory</p>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-sm-3">
+                    <p style="text-align: right;">Ji-Eon Kim, MSc.</p>
+                </div>
+                <div class="col-sm-9">
+                    <p style="text-align: left;">Wonkwang University Medical Convergence Research Center</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <p style="text-align: left;">Article Link: 
+                <a href="https://www.nature.com/articles/s41598-021-94305-2" target="_blank">Development of a system to support warfarin dose decisions using deep neural networks</a> 
+            </p>
+        </div>
+    </form>
+</div>
