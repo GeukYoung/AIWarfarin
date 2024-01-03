@@ -17,15 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-<<<<<<< HEAD
 from warfarin import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.main),
     path("view_result", views.view_result),
-=======
-urlpatterns = [
-    path("admin/", admin.site.urls),
->>>>>>> dde1c30b3e3c50f6bff80463579633b25b6c6140
 ]

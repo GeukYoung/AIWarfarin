@@ -54,11 +54,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-<<<<<<< HEAD
         "DIRS": [BASE_DIR / 'templates'],
-=======
-        "DIRS": [],
->>>>>>> dde1c30b3e3c50f6bff80463579633b25b6c6140
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -114,13 +110,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
-<<<<<<< HEAD
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
-=======
-
->>>>>>> dde1c30b3e3c50f6bff80463579633b25b6c6140
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
