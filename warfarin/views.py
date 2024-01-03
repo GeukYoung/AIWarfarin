@@ -1,12 +1,13 @@
 from django.shortcuts import render
 # from django.http import HttpResponse
-from django.db.models.functions import TruncDay
+from django.db.models.functions import TruncDay, TruncWeek, TruncMonth
 from warfarin.warfarinAI import CalcWarfarin
 from warfarin.models import InputData
 from collections import Counter
+from django.db.models import Count, Min, Max
 import pandas as pd
 import numpy as np
-import datetime
+from datetime import datetime, timedelta
 
 # Create your views here.
 def main(request):
@@ -93,15 +94,47 @@ def view_result(request):
 
 #    return HttpResponse("안녕하세요 pybo에 오신것을 환영합니다.")
 
-def guest_view(request):
-    data = InputData.objects.annotate(day=TruncDay('create_date')).values_list('day', flat=True)
-    dates = [d.date() for d in data] 
-    date_counts = Counter(dates)  
 
-    dates = sorted(date_counts.keys())  
-    counts = [date_counts[date] for date in dates]  
+def visitor_view(request):
+    interval = request.GET.get('interval', 'daily')
 
-    # Prepare the data for the template
-    graph_data = zip(dates, counts)
+    # Find the earliest and latest create_date in the database
+    earliest_date = InputData.objects.aggregate(Min('create_date'))['create_date__min']
+    latest_date = InputData.objects.aggregate(Max('create_date'))['create_date__max']
 
-    return render(request, 'guest.html', {'graph_data': graph_data})
+    if not earliest_date or not latest_date:
+        # Handle the case where there are no entries
+        earliest_date = datetime.now()
+        latest_date = datetime.now()
+
+    if interval == 'daily':
+        data = (InputData.objects
+                        .filter(create_date__range=(earliest_date, latest_date))
+                        .annotate(date=TruncDay('create_date'))
+                        .values('date')
+                        .annotate(count=Count('id'))
+                        .order_by('date'))
+    elif interval == 'weekly':
+        data = (InputData.objects
+                        .filter(create_date__range=(earliest_date, latest_date))
+                        .annotate(date=TruncWeek('create_date'))
+                        .values('date')
+                        .annotate(count=Count('id'))
+                        .order_by('date'))
+    else:  # Default to daily
+        data = (InputData.objects
+                        .filter(create_date__range=(earliest_date, latest_date))
+                        .annotate(date=TruncMonth('create_date'))
+                        .values('date')
+                        .annotate(count=Count('id'))
+                        .order_by('date'))
+        
+    # Fill in missing dates with zero visitors
+    graph_data = {}
+    for entry in data:
+        graph_data[entry['date'].date()] = entry['count']
+    
+    full_date_range = [earliest_date.date() + timedelta(days=x) for x in range((latest_date - earliest_date).days + 1)]
+    graph_data = [(date, graph_data.get(date, 0)) for date in full_date_range]
+
+    return render(request, 'visitor.html', {'graph_data': graph_data, 'selected_interval': interval})
