@@ -3,6 +3,7 @@ import numpy as np
 from keras.models import load_model
 import math
 
+
 # Create your views here.
 def CalcWarfarin(sex, age, bwt, ht, PTINR_1, PTINR_2, PTINR_3, PTINR_4, WFR_1, WFR_2, WFR_3):
     sex_avg = 0.48489738

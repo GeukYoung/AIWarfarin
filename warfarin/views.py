@@ -1,8 +1,12 @@
 from django.shortcuts import render
 # from django.http import HttpResponse
+from django.db.models.functions import TruncDay
 from warfarin.warfarinAI import CalcWarfarin
+from warfarin.models import InputData
+from collections import Counter
 import pandas as pd
 import numpy as np
+import datetime
 
 # Create your views here.
 def main(request):
@@ -23,6 +27,10 @@ def view_result(request):
         WFR_3 = float(request.POST.get('WFR_3'))
         table_warfarin = CalcWarfarin(gender, age, weight, height, PTINR_1, PTINR_2, PTINR_3, PTINR_4, WFR_1, WFR_2, WFR_3)
         
+        input_data = InputData(create_date=datetime.datetime.now(), sex = gender, age = age, bwt = weight, ht = height,
+                         PTINR_1 = PTINR_1, PTINR_2 = PTINR_2, PTINR_3 = PTINR_3, PTINR_4 = PTINR_4,
+                         WFR_1 = WFR_1, WFR_2 = WFR_2, WFR_3 = WFR_3)
+        input_data.save()
         # 1.89 1.98 2.10 2.12
         # 3.5 3.0 3.0
     else:
@@ -84,3 +92,16 @@ def view_result(request):
     #return render(request, 'result_warfarin.html', {'matrix_data': table_warfarin})
 
 #    return HttpResponse("안녕하세요 pybo에 오신것을 환영합니다.")
+
+def guest_view(request):
+    data = InputData.objects.annotate(day=TruncDay('create_date')).values_list('day', flat=True)
+    dates = [d.date() for d in data] 
+    date_counts = Counter(dates)  
+
+    dates = sorted(date_counts.keys())  
+    counts = [date_counts[date] for date in dates]  
+
+    # Prepare the data for the template
+    graph_data = zip(dates, counts)
+
+    return render(request, 'guest.html', {'graph_data': graph_data})
