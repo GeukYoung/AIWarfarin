@@ -63,6 +63,11 @@
             chart.draw(data, options);
         }
 
+        function updateChart() {
+            // Submit the form automatically when the dropdown changes
+            document.forms[0].submit();
+        }
+        
         function drawCharts() {
             drawBarChart();
             drawDonutChart();
@@ -73,12 +78,12 @@
     <h1>Visitor Statistics</h1>
     <form action="" method="get">
         <label for="interval">Select Interval:</label>
-        <select name="interval" id="interval">
+        <select name="interval" id="interval" onchange="updateChart()">
             <option value="daily" {% if selected_interval == 'daily' %}selected{% endif %}>Daily</option>
             <option value="weekly" {% if selected_interval == 'weekly' %}selected{% endif %}>Weekly</option>
             <option value="monthly" {% if selected_interval == 'monthly' %}selected{% endif %}>Monthly</option>
         </select>
-        <input type="submit" value="Show">
+        <!-- Removed the "Show" button as it's no longer needed -->
     </form>
     
     <div id="bar_chart" style="width: 900px; height: 500px"></div>
