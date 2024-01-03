@@ -1,6 +1,6 @@
 from django.shortcuts import render
 # from django.http import HttpResponse
-from django.db.models.functions import TruncDay, TruncWeek, TruncMonth
+from django.db.models.functions import TruncHour, TruncDay, TruncWeek, TruncMonth
 from warfarin.warfarinAI import CalcWarfarin
 from warfarin.models import InputData
 from collections import Counter
@@ -136,5 +136,39 @@ def visitor_view(request):
     
     full_date_range = [earliest_date.date() + timedelta(days=x) for x in range((latest_date - earliest_date).days + 1)]
     graph_data = [(date, graph_data.get(date, 0)) for date in full_date_range]
+    
+    # Calculate additional data for the donut chart
+    if interval == 'daily':
+        key = 'hour'
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=1)  # Last 24 hours
+        donut_data = (InputData.objects
+                              .filter(create_date__range=(start_date, end_date))
+                              .annotate(hour=TruncHour('create_date'))
+                              .values('hour')
+                              .annotate(count=Count('id'))
+                              .order_by('hour'))
+    elif interval == 'weekly':
+        key = 'day'
+        end_date = datetime.now()
+        start_date = end_date - timedelta(weeks=1)  # Last week
+        donut_data = (InputData.objects
+                              .filter(create_date__range=(start_date, end_date))
+                              .annotate(day=TruncDay('create_date'))
+                              .values('day')
+                              .annotate(count=Count('id'))
+                              .order_by('day'))
+    else:  # Monthly
+        key = 'month'
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=365)  # Last year
+        donut_data = (InputData.objects
+                              .filter(create_date__range=(start_date, end_date))
+                              .annotate(month=TruncMonth('create_date'))
+                              .values('month')
+                              .annotate(count=Count('id'))
+                              .order_by('month'))
+        
+    donut_data = [[entry[key].strftime('%Y-%m-%d %H:%M:%S'), entry['count']] for entry in donut_data]
 
-    return render(request, 'visitor.html', {'graph_data': graph_data, 'selected_interval': interval})
+    return render(request, 'visitor.html', {'graph_data': graph_data, 'donut_data': donut_data, 'selected_interval': interval})

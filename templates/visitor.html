@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Daily, Weekly, and Monthly Visitors</title>
+    <title>Visitor Statistics</title>
     <!-- Load Google Charts -->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
         google.charts.load('current', {'packages':['corechart', 'bar']});
-        google.charts.setOnLoadCallback(drawChart);
-    
-        function drawChart() {
+        google.charts.setOnLoadCallback(drawCharts);
+
+        function drawBarChart() {
             var data = new google.visualization.DataTable();
             data.addColumn('date', 'Date');
             data.addColumn('number', 'Visitors');
-    
+
             data.addRows([
                 {% for date, count in graph_data %}
                     [new Date('{{ date|date:"Y-m-d" }}'), {{ count }}],
                 {% endfor %}
             ]);
-    
+
             var options = {
                 title: 'Visitors',
                 hAxis: {
@@ -32,9 +32,40 @@
                 legend: { position: 'none' },
                 bars: 'vertical' // Required for Material Bar Charts.
             };
-    
-            var chart = new google.visualization.ColumnChart(document.getElementById('curve_chart'));
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('bar_chart'));
             chart.draw(data, options);
+        }
+
+        function drawDonutChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Time');
+            data.addColumn('number', 'Visitors');
+    
+            data.addRows([
+                {% for entry in donut_data %}
+                    ['{{ entry.0 }} ({{ entry.1 }})', {{ entry.1 }}],  // Include the count in the label
+                {% endfor %}
+            ]);
+    
+            var options = {
+                title: 'Visitors Distribution',
+                pieHole: 0.4,
+                legend: { 
+                    position: 'right', 
+                    alignment: 'center', 
+                    textStyle: {fontSize: 12} 
+                },
+                pieSliceText: 'value',  // Show the value on the slices
+            };
+    
+            var chart = new google.visualization.PieChart(document.getElementById('donut_chart'));
+            chart.draw(data, options);
+        }
+
+        function drawCharts() {
+            drawBarChart();
+            drawDonutChart();
         }
     </script>
 </head>
@@ -50,6 +81,7 @@
         <input type="submit" value="Show">
     </form>
     
-    <div id="curve_chart" style="width: 900px; height: 500px"></div>
+    <div id="bar_chart" style="width: 900px; height: 500px"></div>
+    <div id="donut_chart" style="width: 900px; height: 500px"></div>
 </body>
 </html>
