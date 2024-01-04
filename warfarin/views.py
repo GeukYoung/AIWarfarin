@@ -28,7 +28,7 @@ def view_result(request):
         WFR_3 = float(request.POST.get('WFR_3'))
         table_warfarin = CalcWarfarin(gender, age, weight, height, PTINR_1, PTINR_2, PTINR_3, PTINR_4, WFR_1, WFR_2, WFR_3)
         
-        input_data = InputData(create_date=datetime.datetime.now(), sex = gender, age = age, bwt = weight, ht = height,
+        input_data = InputData(create_date=datetime.now(), sex = gender, age = age, bwt = weight, ht = height,
                          PTINR_1 = PTINR_1, PTINR_2 = PTINR_2, PTINR_3 = PTINR_3, PTINR_4 = PTINR_4,
                          WFR_1 = WFR_1, WFR_2 = WFR_2, WFR_3 = WFR_3)
         input_data.save()
