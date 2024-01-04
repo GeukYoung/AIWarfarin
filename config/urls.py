@@ -22,6 +22,6 @@ from warfarin import views
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.main),
-    path("view_result", views.view_result),
+    path("result", views.view_result),
     path("visitor/", views.visitor_view, name='visitor_view'),
 ]
