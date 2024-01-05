@@ -8,6 +8,7 @@ from django.db.models import Count, Min, Max
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
+from django.utils import timezone
 
 # Create your views here.
 def main(request):
@@ -28,7 +29,7 @@ def view_result(request):
         WFR_3 = float(request.POST.get('WFR_3'))
         table_warfarin = CalcWarfarin(gender, age, weight, height, PTINR_1, PTINR_2, PTINR_3, PTINR_4, WFR_1, WFR_2, WFR_3)
         
-        input_data = InputData(create_date=datetime.now(), sex = gender, age = age, bwt = weight, ht = height,
+        input_data = InputData(create_date=timezone.now(), sex = gender, age = age, bwt = weight, ht = height,
                          PTINR_1 = PTINR_1, PTINR_2 = PTINR_2, PTINR_3 = PTINR_3, PTINR_4 = PTINR_4,
                          WFR_1 = WFR_1, WFR_2 = WFR_2, WFR_3 = WFR_3)
         input_data.save()
@@ -89,11 +90,6 @@ def view_result(request):
     # context['value_dose'] = range(0.5,8)
     print(context)
     return render(request, 'result_warfarin.html', context)
-    # return render(request, 'result_warfarin.html', {'df' : df.to_html(index=False,justify='center')})
-    #return render(request, 'result_warfarin.html', {'matrix_data': table_warfarin})
-
-#    return HttpResponse("안녕하세요 pybo에 오신것을 환영합니다.")
-
 
 def visitor_view(request):
     interval = request.GET.get('interval', 'daily')
@@ -106,6 +102,9 @@ def visitor_view(request):
         # Handle the case where there are no entries
         earliest_date = datetime.now()
         latest_date = datetime.now()
+    
+    earliest_date = (earliest_date - timedelta(days=1)).replace(hour=9, minute=0, second=0, microsecond=0)
+    latest_date = (latest_date + timedelta(days=1)).replace(hour=9, minute=0, second=0, microsecond=0)
 
     if interval == 'daily':
         data = (InputData.objects
@@ -121,7 +120,7 @@ def visitor_view(request):
                         .values('date')
                         .annotate(count=Count('id'))
                         .order_by('date'))
-    else:  # Default to daily
+    else:
         data = (InputData.objects
                         .filter(create_date__range=(earliest_date, latest_date))
                         .annotate(date=TruncMonth('create_date'))
@@ -168,7 +167,7 @@ def visitor_view(request):
                               .values('month')
                               .annotate(count=Count('id'))
                               .order_by('month'))
-        
+
     donut_data = [[entry[key].strftime('%Y-%m-%d %H:%M:%S'), entry['count']] for entry in donut_data]
 
     return render(request, 'visitor.html', {'graph_data': graph_data, 'donut_data': donut_data, 'selected_interval': interval})
