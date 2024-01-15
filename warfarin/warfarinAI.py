@@ -1,8 +1,6 @@
-import os
 import numpy as np
-from keras.models import load_model
 import math
-
+from .apps import WarfarinConfig
 
 # Create your views here.
 def CalcWarfarin(sex, age, bwt, ht, PTINR_1, PTINR_2, PTINR_3, PTINR_4, WFR_1, WFR_2, WFR_3):
@@ -31,21 +29,20 @@ def CalcWarfarin(sex, age, bwt, ht, PTINR_1, PTINR_2, PTINR_3, PTINR_4, WFR_1, W
         return result
     # (optional) Load model from a h5 file
     # Get the directory of the current script
-    current_dir = os.path.dirname(os.path.realpath(__file__))
+    # current_dir = os.path.dirname(os.path.realpath(__file__))
 
-    # Name of your model file
-    model_name = "model_20200228-02.h5"
+    # # Name of your model file
+    # model_name = "model_20200228-02.h5"
 
-    # Construct the full path to the model
-    model_path = os.path.join(current_dir, model_name)
+    # # Construct the full path to the model
+    # model_path = os.path.join(current_dir, model_name)
 
-    # Load the model
-    model = load_model(model_path)
+    # # Load the model
+    # model = load_model(model_path)
 
     # model = load_model("C:/Users/SNUBH/Downloads/model_20200228-02.h5")
-    """
-    Coding for single individualized table generation
-    """
+    model = WarfarinConfig.model
+    
     # Baseline values
     WFR_min = 0.5
     WFR_max = 8
