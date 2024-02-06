@@ -2,6 +2,9 @@ import numpy as np
 import math
 from .apps import WarfarinConfig
 
+from tensorflow.python.client import device_lib
+device_lib.list_local_devices()
+
 # Create your views here.
 def CalcWarfarin(sex, age, bwt, ht, PTINR_1, PTINR_2, PTINR_3, PTINR_4, WFR_1, WFR_2, WFR_3):
     sex_avg = 0.48489738
